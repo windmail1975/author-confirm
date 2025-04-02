@@ -106,6 +106,7 @@ def submit():
 
     from datetime import datetime
     submitted_at = datetime.now().isoformat(timespec="seconds")
+    account_name = data.get("account_name")
 
     c.execute("INSERT INTO submissions (id, name, email, title, fee, bank, account, account_name, submitted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
         data["id"], data["name"], data["email"], data["title"],
