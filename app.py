@@ -123,10 +123,30 @@ def export_page():
 @app.route("/download-export")
 def download_export():
     conn = sqlite3.connect(DB_PATH)
-    df = pd.read_sql_query("SELECT * FROM submissions", conn)
+    submitted_df = pd.read_sql_query("SELECT * FROM submissions", conn)
+    submitted_ids = submitted_df["id"].tolist()
     conn.close()
-    export_path = "submissions_export.xlsx"
-    export_to_excel_pretty(df, export_path)
+
+    # 找出最新的 authors.xlsx
+    files = sorted([f for f in os.listdir(UPLOAD_FOLDER) if f.endswith(".xlsx")])
+    if not files:
+        return "❗ 無可比對的 authors.xlsx 檔案。請先上傳。"
+    latest_file = os.path.join(UPLOAD_FOLDER, files[-1])
+    df_authors = pd.read_excel(latest_file)
+
+    pending_df = df_authors[~df_authors["id"].isin(submitted_ids)]
+
+    # 在兩個表格中加上「狀態」欄
+    submitted_df.insert(0, "狀態", "✅ 已回覆")
+    pending_df.insert(0, "狀態", "⏳ 未回覆")
+
+    # 重新命名欄位順序（若有不同）
+    pending_df = pending_df[[col for col in submitted_df.columns if col in pending_df.columns]]
+
+    combined_df = pd.concat([submitted_df, pending_df], ignore_index=True)
+
+    export_path = "submissions_combined.xlsx"
+    export_to_excel_pretty(combined_df, export_path)
     return send_file(export_path, as_attachment=True)
 
 def export_to_excel_pretty(df, export_path="submissions_export.xlsx"):
