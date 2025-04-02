@@ -92,17 +92,27 @@ def send_email(name, recipient, page_id):
 @app.route("/submit", methods=["POST"])
 def submit():
     data = request.form
-    submitted_at = datetime.now().isoformat(timespec="seconds")
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("INSERT OR REPLACE INTO submissions (id, name, email, title, fee, bank, account, submitted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (
+
+    # 查詢該 ID 是否已經存在
+    c.execute("SELECT * FROM submissions WHERE id = ?", (data["id"],))
+    existing = c.fetchone()
+
+    if existing:
+        conn.close()
+        return "⚠️ 您已經填寫過表單了，無需重複提交。"
+
+    from datetime import datetime
+    submitted_at = datetime.now().isoformat(timespec="seconds")
+
+    c.execute("INSERT INTO submissions (id, name, email, title, fee, bank, account, submitted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (
         data["id"], data["name"], data["email"], data["title"],
         data["fee"], data["bank"], data["account"], submitted_at
     ))
     conn.commit()
     conn.close()
-    return "已成功送出，感謝您！"
-
+    return "✅ 表單已成功送出，感謝您！"
 
 @app.route("/export")
 def export():
