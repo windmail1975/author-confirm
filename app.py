@@ -126,8 +126,22 @@ def download_export():
     df = pd.read_sql_query("SELECT * FROM submissions", conn)
     conn.close()
     export_path = "submissions_export.xlsx"
-    df.to_excel(export_path, index=False)
+    export_to_excel_pretty(df, export_path)
     return send_file(export_path, as_attachment=True)
+
+def export_to_excel_pretty(df, export_path="submissions_export.xlsx"):
+    from openpyxl.utils import get_column_letter
+    from openpyxl.styles import Alignment, Font
+    with pd.ExcelWriter(export_path, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name="回覆紀錄")
+        ws = writer.sheets["回覆紀錄"]
+        for cell in ws[1]:
+            cell.font = Font(bold=True)
+            cell.alignment = Alignment(horizontal="center", vertical="center")
+        for col in ws.columns:
+            max_length = max(len(str(cell.value)) if cell.value else 0 for cell in col)
+            col_letter = get_column_letter(col[0].column)
+            ws.column_dimensions[col_letter].width = max_length + 2
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
