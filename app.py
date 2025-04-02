@@ -61,11 +61,17 @@ def upload_file():
 
 def generate_confirm_pages(filepath):
     df = pd.read_excel(filepath)
+
+    # 若沒有 id 欄位，自動新增
+    if "id" not in df.columns:
+        df.insert(0, "id", [str(uuid.uuid4())[:8] for _ in range(len(df))])
+        df.to_excel(filepath, index=False)
+
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("confirm_template.html")
 
     for _, row in df.iterrows():
-        unique_id = str(uuid.uuid4())[:8]
+        unique_id = row["id"]
         filename = f"{unique_id}.html"
         html = template.render(
             id=unique_id,
