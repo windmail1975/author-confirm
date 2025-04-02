@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>上傳 Excel</title></head>
+<body>
+  <h1>上傳 authors.xlsx</h1>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  <form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="上傳並產生頁面">
+  </form>
+</body>
+</html>

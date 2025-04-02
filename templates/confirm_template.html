@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head><meta charset="UTF-8"><title>稿費確認</title></head>
+<body>
+  <h2>您好，{{ name }}：</h2>
+  <p>以下是您的稿費資訊：</p>
+  <ul>
+    <li>稿費類型：{{ title }}</li>
+    <li>金額：{{ fee }} 元</li>
+  </ul>
+  <form action="/submit" method="post">
+    <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="name" value="{{ name }}">
+    <input type="hidden" name="title" value="{{ title }}">
+    <input type="hidden" name="fee" value="{{ fee }}">
+    <input type="hidden" name="email" value="">
+    <p><label>銀行名稱：<input type="text" name="bank"></label></p>
+    <p><label>銀行帳號：<input type="text" name="account"></label></p>
+    <button type="submit">確認送出</button>
+  </form>
+</body>
+</html>

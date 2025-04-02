@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: author-confirm
+    env: python
+    buildCommand: ""
+    startCommand: "python app.py"
+    envVars:
+      - key: EMAIL_ADDRESS
+        value: your_email@gmail.com
+      - key: EMAIL_PASSWORD
+        value: your_app_password
+      - key: BASE_URL
+        value: https://your-subdomain.onrender.com
