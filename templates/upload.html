@@ -3,7 +3,7 @@
 <head><meta charset="UTF-8"><title>上傳 Excel</title></head>
 <body>
   <h1>【幻華創造】稿費通知管理系統</h1>
-  <h2>上傳 authors.xlsx</h2>
+  <h2>上傳 .xlsx</h2>
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       <ul>
@@ -15,7 +15,7 @@
   {% endwith %}
   <form method="POST" enctype="multipart/form-data">
     <input type="file" name="file">
-    <input type="submit" value="上傳並產生頁面">
+    <input type="submit" value="上傳並立即發信通知">
   </form>
 </body>
 </html>
