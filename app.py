@@ -7,6 +7,7 @@ from jinja2 import Environment, FileSystemLoader
 from werkzeug.utils import secure_filename
 import smtplib
 from email.message import EmailMessage
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
@@ -30,7 +31,8 @@ def init_db():
         title TEXT,
         fee INTEGER,
         bank TEXT,
-        account TEXT
+        account TEXT,
+        submitted_at TEXT
     )""")
     conn.commit()
     conn.close()
@@ -90,10 +92,12 @@ def send_email(name, recipient, page_id):
 @app.route("/submit", methods=["POST"])
 def submit():
     data = request.form
+    submitted_at = datetime.now().isoformat(timespec="seconds")
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("INSERT OR REPLACE INTO submissions (id, name, email, title, fee, bank, account) VALUES (?, ?, ?, ?, ?, ?, ?)", (
-        data["id"], data["name"], data["email"], data["title"], data["fee"], data["bank"], data["account"]
+    c.execute("INSERT OR REPLACE INTO submissions (id, name, email, title, fee, bank, account, submitted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (
+        data["id"], data["name"], data["email"], data["title"],
+        data["fee"], data["bank"], data["account"], submitted_at
     ))
     conn.commit()
     conn.close()
