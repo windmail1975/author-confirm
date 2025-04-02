@@ -67,6 +67,7 @@ def generate_confirm_pages(filepath):
         html = template.render(
             id=unique_id,
             name=row["Author"],
+            email=row["E-mail"],
             title=row["Title"],
             fee=row["Fee"]
         )
