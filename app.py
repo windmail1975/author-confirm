@@ -105,7 +105,7 @@ def submit():
         return "⚠️ 您已經填寫過表單了，無需重複提交。"
 
     from datetime import datetime
-    submitted_at = datetime.now().isoformat(timespec="seconds")
+    submitted_at = datetime.now().strftime("%Y/%m/%d %H:%M")
     account_name = data.get("account_name")
 
     c.execute("INSERT INTO submissions (id, name, email, title, fee, bank, account, account_name, submitted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
