@@ -32,6 +32,7 @@ def init_db():
         fee INTEGER,
         bank TEXT,
         account TEXT,
+        account_name TEXT,
         submitted_at TEXT
     )""")
     conn.commit()
@@ -106,9 +107,9 @@ def submit():
     from datetime import datetime
     submitted_at = datetime.now().isoformat(timespec="seconds")
 
-    c.execute("INSERT INTO submissions (id, name, email, title, fee, bank, account, submitted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (
+    c.execute("INSERT INTO submissions (id, name, email, title, fee, bank, account, account_name, submitted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
         data["id"], data["name"], data["email"], data["title"],
-        data["fee"], data["bank"], data["account"], submitted_at
+        data["fee"], data["bank"], data["account"], account_name, submitted_at
     ))
     conn.commit()
     conn.close()
