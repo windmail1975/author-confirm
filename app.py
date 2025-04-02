@@ -143,5 +143,24 @@ def export_to_excel_pretty(df, export_path="submissions_export.xlsx"):
             col_letter = get_column_letter(col[0].column)
             ws.column_dimensions[col_letter].width = max_length + 2
 
+@app.route("/pending")
+def pending_list():
+    conn = sqlite3.connect(DB_PATH)
+    submitted_ids = pd.read_sql_query("SELECT id FROM submissions", conn)["id"].tolist()
+    conn.close()
+
+    files = sorted([f for f in os.listdir(UPLOAD_FOLDER) if f.endswith(".xlsx")])
+    if not files:
+        return "❗ 無可比對的 authors.xlsx 檔案。請先上傳。"
+
+    latest_file = os.path.join(UPLOAD_FOLDER, files[-1])
+    df_authors = pd.read_excel(latest_file)
+
+    pending_df = df_authors[~df_authors["id"].isin(submitted_ids)]
+
+    export_path = "pending.xlsx"
+    export_to_excel_pretty(pending_df, export_path)
+    return send_file(export_path, as_attachment=True)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
