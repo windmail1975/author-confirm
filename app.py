@@ -115,13 +115,16 @@ def submit():
     return "✅ 表單已成功送出，感謝您！"
 
 @app.route("/export")
-def export():
+def export_page():
+    return render_template("export.html")
+
+@app.route("/download-export")
+def download_export():
     conn = sqlite3.connect(DB_PATH)
     df = pd.read_sql_query("SELECT * FROM submissions", conn)
     conn.close()
     export_path = "submissions_export.xlsx"
     df.to_excel(export_path, index=False)
-    from flask import send_file
     return send_file(export_path, as_attachment=True)
 
 if __name__ == "__main__":
