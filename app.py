@@ -83,7 +83,7 @@ def send_email(name, recipient, page_id):
     msg["From"] = os.getenv("EMAIL_ADDRESS")
     msg["To"] = recipient
     link = f"{os.getenv('BASE_URL')}/static/confirm_pages/{page_id}.html"
-    msg.set_content(f"您好 {name}，\n\n請點選以下連結確認您的稿費資訊並填寫帳戶資料：\n{link}")
+    msg.set_content(f"您好 {name}，\n\n請點選以下連結，確認您的稿費資訊是否正確，並填寫帳戶資料：\n{link}")
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
         smtp.login(os.getenv("EMAIL_ADDRESS"), os.getenv("EMAIL_PASSWORD"))
