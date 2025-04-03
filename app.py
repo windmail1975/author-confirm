@@ -53,8 +53,8 @@ def upload_file():
 
         file = request.files["file"]
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            path = os.path.join(UPLOAD_FOLDER, filename)
+            filename = f"authors_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+    path = os.path.join(UPLOAD_FOLDER, filename)
             file.save(path)
             generate_confirm_pages(path)
             flash("成功上傳並產生確認頁！")
