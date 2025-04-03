@@ -1,14 +1,26 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>【幻華創造】下載稿費通知回函填寫結果</title>
-</head>
+<html>
+<head><meta charset="UTF-8"><title>上傳 Excel</title></head>
 <body>
-    <h2>【幻華創造】下載稿費通知回函狀況</h2>
-    <p>點選下方按鈕，下載目前名單上的回覆資訊。</p>
-    <form action="/download-export" method="get">
-        <button type="submit">📥 下載 Excel 檔</button>
-    </form>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <script>alert("{{ messages[0] }}");</script>
+  {% endif %}
+{% endwith %}
+  <h1>【幻華創造】稿費通知管理系統</h1>
+  <h2>上傳 .xlsx</h2>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  <form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="立即發信通知">
+  </form>
 </body>
 </html>
