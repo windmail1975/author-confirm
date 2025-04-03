@@ -148,10 +148,10 @@ def download_export():
 
     # 重新命名欄位順序（若有不同）
     # 補上缺的欄位再重新排序
-for col in submitted_df.columns:
-    if col not in pending_df.columns:
-        pending_df[col] = ""
-pending_df = pending_df[submitted_df.columns]
+    for col in submitted_df.columns:
+        if col not in pending_df.columns:
+            pending_df[col] = ""
+    pending_df = pending_df[submitted_df.columns]
 
     combined_df = pd.concat([submitted_df, pending_df], ignore_index=True)
 
