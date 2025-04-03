@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename
 import smtplib
 from email.message import EmailMessage
 from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
@@ -111,7 +112,8 @@ def submit():
         return "⚠️ 您已經填寫過表單了，無需重複提交。"
 
     from datetime import datetime
-    submitted_at = datetime.now().strftime("%Y/%m/%d %H:%M")
+import pytz
+    submitted_at = datetime.now(pytz.timezone("Asia/Taipei")).strftime("%Y/%m/%d %H:%M")
     account_name = data.get("account_name")
 
     c.execute("INSERT INTO submissions (id, name, email, title, fee, bank, account, account_name, submitted_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (
@@ -147,7 +149,11 @@ def download_export():
     pending_df.insert(0, "狀態", "⏳ 未回覆")
 
     # 重新命名欄位順序（若有不同）
-    pending_df = pending_df[[col for col in submitted_df.columns if col in pending_df.columns]]
+    # 補上缺的欄位再重新排序
+for col in submitted_df.columns:
+    if col not in pending_df.columns:
+        pending_df[col] = ""
+pending_df = pending_df[submitted_df.columns]
 
     combined_df = pd.concat([submitted_df, pending_df], ignore_index=True)
 
