@@ -162,6 +162,7 @@ def download_export():
 def export_to_excel_pretty(df, export_path="submissions_export.xlsx"):
     from openpyxl.utils import get_column_letter
     from openpyxl.styles import Alignment, Font, Border, Side
+    import re
     with pd.ExcelWriter(export_path, engine='openpyxl') as writer:
         df.to_excel(writer, index=False, sheet_name="回覆紀錄")
         ws = writer.sheets["回覆紀錄"]
@@ -171,6 +172,21 @@ def export_to_excel_pretty(df, export_path="submissions_export.xlsx"):
             top=Side(style='thin'),
             bottom=Side(style='thin')
         )
+        for row in ws.iter_rows():
+            for cell in row:
+                cell.border = border
+                cell.font = Font(name="Calibri")
+        for cell in ws[1]:
+            cell.font = Font(bold=True, name="Calibri")
+            cell.alignment = Alignment(horizontal="center", vertical="center")
+        for col in ws.columns:
+            max_length = 0
+            for cell in col:
+                value = str(cell.value) if cell.value is not None else ""
+                value = re.sub(r"[^\w\s\u4e00-\u9fff]", "", value)
+                max_length = max(max_length, len(value))
+            col_letter = get_column_letter(col[0].column)
+            ws.column_dimensions[col_letter].width = max_length + 2
 
         for row in ws.iter_rows():
             for cell in row:
