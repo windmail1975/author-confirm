@@ -1,26 +1,23 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>上傳 Excel</title></head>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>上傳 Excel</title>
+</head>
 <body>
+
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     <script>alert("{{ messages[0] }}");</script>
   {% endif %}
 {% endwith %}
-  <h1>【幻華創造】稿費通知管理系統</h1>
-  <h2>上傳 .xlsx</h2>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul>
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
-  <form method="POST" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <input type="submit" value="立即發信通知">
-  </form>
+
+<h2>上傳稿費名單</h2>
+<form method="POST" enctype="multipart/form-data">
+    選擇檔案：<input type="file" name="file" required><br><br>
+    密碼：<input type="password" name="password" required><br><br>
+    <button type="submit">上傳並寄送確認信</button>
+</form>
+
 </body>
 </html>
