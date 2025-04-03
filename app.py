@@ -111,8 +111,6 @@ def submit():
         conn.close()
         return "⚠️ 您已經填寫過表單了，無需重複提交。"
 
-    from datetime import datetime
-import pytz
     submitted_at = datetime.now(pytz.timezone("Asia/Taipei")).strftime("%Y/%m/%d %H:%M")
     account_name = data.get("account_name")
 
