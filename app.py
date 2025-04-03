@@ -47,6 +47,10 @@ def allowed_file(filename):
 @app.route("/", methods=["GET", "POST"])
 def upload_file():
     if request.method == "POST":
+        if request.form.get("password") != os.getenv("USER_PASSWORD"):
+            flash("密碼錯誤，請重新輸入。")
+            return redirect(url_for("upload_file"))
+
         file = request.files["file"]
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -122,9 +126,16 @@ def submit():
     conn.close()
     return "✅ 表單已成功送出，感謝您！"
 
-@app.route("/export")
+
+@app.route("/export", methods=["GET", "POST"])
 def export_page():
+    if request.method == "POST":
+        if request.form.get("password") != os.getenv("USER_PASSWORD"):
+            flash("密碼錯誤，請重新輸入。")
+            return redirect(url_for("export_page"))
+        return redirect(url_for("download_export"))
     return render_template("export.html")
+
 
 @app.route("/download-export")
 def download_export():
