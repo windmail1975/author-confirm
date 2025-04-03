@@ -94,6 +94,7 @@ def send_email(name, recipient, page_id):
     msg["Subject"] = "【幻華創造】稿費資訊確認通知信"
     msg["From"] = os.getenv("EMAIL_ADDRESS")
     msg["To"] = recipient
+    msg["Cc"] = os.getenv("EMAIL_ADDRESS")
     link = f"{os.getenv('BASE_URL')}/static/confirm_pages/{page_id}.html"
     msg.set_content(f"您好 {name}，\n\n請點選以下連結，確認您的稿費資訊是否正確，並填寫帳戶資料：\n{link}")
 
